@@ -21,6 +21,7 @@ type Handler struct {
 
 type AskerService interface {
 	GetInfo(ctx context.Context) (info models.Info, err error)
+	ListLatestResult(ctx context.Context) (result models.Result, err error)
 	ListResults(ctx context.Context, dateFrom, dateTo time.Time) (results models.Results, err error)
 	SetInterval(ctx context.Context, interval time.Duration) (err error)
 	SetURLs(ctx context.Context, urls ...string) (err error)
@@ -38,6 +39,7 @@ func (h *Handler) Register() {
 	apiRouter := h.router.PathPrefix("/api/v1").Subrouter()
 	apiRouter.Use(SetCORSHeaders)
 	apiRouter.HandleFunc("/info", HandleError(h.GetInfo)).Methods(http.MethodGet)
+	apiRouter.HandleFunc("/listLatest", HandleError(h.ListLatestResult)).Methods(http.MethodGet)
 	apiRouter.HandleFunc("/list", HandleError(h.ListResults)).Methods(http.MethodGet)
 	apiRouter.HandleFunc("/setInterval", HandleError(h.SetInterval)).Methods(http.MethodPost)
 	apiRouter.HandleFunc("/setUrls", HandleError(h.SetURLs)).Methods(http.MethodPost)
@@ -64,6 +66,25 @@ func (h *Handler) GetInfo(w http.ResponseWriter, r *http.Request) error {
 	body, err := json.Marshal(resp)
 	if err != nil {
 		return InternalServerErr.SetDebugMsg(fmt.Sprintf("failed to marshall info to response due to error: %v",
+			err.Error()))
+	}
+	w.Write(body)
+
+	return nil
+}
+
+func (h *Handler) ListLatestResult(w http.ResponseWriter, r *http.Request) error {
+	data, err := h.asker.ListLatestResult(context.Background())
+	if err != nil {
+		return InternalServerErr.SetDebugMsg(fmt.Sprintf("failed to get result due to error: %v",
+			err.Error()))
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(http.StatusOK)
+	body, err := json.Marshal(data)
+	if err != nil {
+		return InternalServerErr.SetDebugMsg(fmt.Sprintf("failed to marshall result to response due to error: %v",
 			err.Error()))
 	}
 	w.Write(body)

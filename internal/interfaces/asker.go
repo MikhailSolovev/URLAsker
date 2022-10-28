@@ -10,6 +10,7 @@ import (
 
 type Asker interface {
 	GetInfo(ctx context.Context) (info models.Info, err error)
+	ListLatestResult(ctx context.Context) (result models.Result, err error)
 	// ListResults - list results between two dates
 	ListResults(ctx context.Context, dateFrom, dateTo time.Time) (results models.Results, err error)
 	SetInterval(ctx context.Context, interval time.Duration) (err error)

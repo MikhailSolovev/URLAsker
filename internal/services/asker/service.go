@@ -14,6 +14,7 @@ type Service struct {
 }
 
 type Storage interface {
+	ListLatestResult(ctx context.Context) (results models.ResultsPostgresDTO, err error)
 	ListResults(ctx context.Context, dateFrom, dateTo time.Time) (results models.ResultsPostgresDTO, err error)
 	RecordResult(ctx context.Context, result models.ResultPostgresDTO) (err error)
 }
@@ -54,6 +55,23 @@ func (s *Service) GetInfo(ctx context.Context) (info models.Info, err error) {
 	s.info.RLock()
 	defer s.info.RUnlock()
 	return *s.info, nil
+}
+
+func (s *Service) ListLatestResult(ctx context.Context) (result models.Result, err error) {
+	data, err := s.db.ListLatestResult(ctx)
+	if err != nil {
+		return
+	}
+
+	result = models.Result{URLs: map[string]bool{}}
+	for i, dtoResult := range data.Results {
+		if i == 0 {
+			result.Date = dtoResult.Date
+		}
+		result.URLs[dtoResult.URL] = dtoResult.Available
+	}
+
+	return
 }
 
 func (s *Service) ListResults(ctx context.Context, dateFrom, dateTo time.Time) (results models.Results, err error) {
