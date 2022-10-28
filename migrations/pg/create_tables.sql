@@ -1,0 +1,5 @@
+CREATE TABLE IF NOT EXISTS availability (
+    dtm TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+    url VARCHAR ( 255 ) NOT NULL,
+    available BOOLEAN NOT NULL
+);

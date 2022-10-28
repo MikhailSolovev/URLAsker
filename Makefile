@@ -15,3 +15,8 @@ restart:
 	docker-compose -f ./deploy/docker-compose.yml down
 	docker image rm -f deploy-asker
 	docker-compose -f ./deploy/docker-compose.yml up
+
+# TODO: make tests and swagger generator
+.PHONY: test-local
+test:
+	go test ./test -v -url=http://localhost

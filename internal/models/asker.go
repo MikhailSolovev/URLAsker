@@ -1,12 +1,22 @@
 package models
 
-import "time"
+import (
+	"sync"
+	"time"
+)
 
 type Empty struct{}
 
 type Info struct {
-	Interval time.Duration    `json:"interval"`
-	URLs     map[string]Empty `json:"urls"`
+	sync.RWMutex
+	Interval time.Duration
+	Ticker   *time.Ticker
+	URLs     map[string]Empty
+}
+
+type InfoRestDTO struct {
+	Interval string   `json:"interval"`
+	URLs     []string `json:"urls"`
 }
 
 type Result struct {
@@ -16,4 +26,14 @@ type Result struct {
 
 type Results struct {
 	Results []Result `json:"results"`
+}
+
+type ResultPostgresDTO struct {
+	Date      time.Time
+	URL       string
+	Available bool
+}
+
+type ResultsPostgresDTO struct {
+	Results []ResultPostgresDTO
 }

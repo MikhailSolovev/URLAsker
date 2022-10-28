@@ -4,17 +4,23 @@
 
 
 ### Contracts
-Project has several public contracts: [swagger]() 
+Project has several public contracts: [swagger](https://github.com/MikhailSolovev/URLAsker/blob/main/api/swagger.yaml),
+[interfaces](https://github.com/MikhailSolovev/URLAsker/blob/main/internal/interfaces/asker.go)
 
-### Build
+### Make
 
-`make run`
+`run`
 
-`make stop`
+`stop`
 
-`make stop-clean-volumes`
+`stop-clean-volumes`
 
-`make restart`
+`restart`
+
+`test-local`
+
+### Code architecture
+![Alt text](./img/clean_code_architecture.png)
 
 ### Some thoughts
 Maybe it's more convenient to use clickhouse instead postgres,

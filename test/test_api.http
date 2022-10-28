@@ -1,0 +1,42 @@
+# PROBES
+
+###
+GET http://{{host}}/readiness
+
+###
+GET http://{{host}}/liveness
+
+# API
+
+###
+GET http://{{host}}/api/v1/info
+Accept: application/json
+
+###
+GET http://{{host}}/api/v1/list?dateFrom=2022-10-28T15:28:00Z&dateTo=2022-10-28T15:28:10Z
+Accept: application/json
+
+###
+POST http://{{host}}/api/v1/setInterval?interval=15s
+Accept: text/plain
+
+###
+POST http://{{host}}/api/v1/setUrls
+Accept: text/plain
+Content-Type: application/json
+
+["https://www.google.com/", "https://yandex.com/", "https://www.yahoo.com/", "http://xydsffew.com/"]
+
+###
+PUT http://{{host}}/api/v1/addUrls
+Accept: text/plain
+Content-Type: application/json
+
+["https://www.google.com/", "https://www.rambler.ru/"]
+
+###
+DELETE http://{{host}}/api/v1/deleteUrls
+Accept: text/plain
+Content-Type: application/json
+
+["https://www.google.com/"]

@@ -13,7 +13,7 @@ FROM alpine:3.16 as runner
 
 WORKDIR /app
 
-RUN apk update && apk upgrade && apk add bash
+RUN apk update && apk upgrade && apk add coreutils && apk add bash
 
 COPY --from=builder /src/asker /src/pkg/utils/wait-for-it.sh ./
-RUN chmod 777 ./wait-for-it.sh
+RUN chmod +x ./wait-for-it.sh

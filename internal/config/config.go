@@ -22,11 +22,12 @@ type Options struct {
 	IdleTimeout         time.Duration `env:"IDLE_TIMEOUT" envDefault:"60s"`
 	GracefulTimeout     time.Duration `env:"GRACEFUL_TIMEOUT" envDefault:"15s"`
 	PostgresUser        string        `env:"POSTGRES_USER"`
-	PostgresPass        string        `env:"POSTGRES_PASS"`
+	PostgresPass        string        `env:"POSTGRES_PASSWORD"`
 	PostgresHost        string        `env:"POSTGRES_HOST"`
 	PostgresPort        string        `env:"POSTGRES_PORT" envDefault:"5432"`
 	PostgresDB          string        `env:"POSTGRES_DB"`
 	PostgresConnTimeout time.Duration `env:"POSTGRES_CONN_TIMEOUT" envDefault:"5s"`
+	AskerInterval       time.Duration `env:"ASKER_INTERVAL" envDefault:"15s"`
 }
 
 func New() *Options {
