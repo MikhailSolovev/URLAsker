@@ -1,0 +1,119 @@
+basePath: /api/v1
+definitions:
+    Result:
+        properties:
+            date:
+                example: "2022-10-30T20:04:11.827677Z"
+                format: date-time
+                type: string
+                x-go-name: Date
+            urls:
+                additionalProperties:
+                    type: boolean
+                example:
+                    http://xydsffew.com/: false
+                    https://www.google.com/: true
+                type: object
+                x-go-name: URLs
+        type: object
+        x-go-package: _/Users/ion_mion/GolandProjects/URLAsker/URLAsker/internal/models
+host: localhost
+info:
+    title: URLASker.
+    version: 0.0.1
+paths:
+    /addUrls:
+        put:
+            operationId: idAddUrls
+            produces:
+                - text/plain
+            responses: {}
+            summary: Append urls to set of urls.
+            tags:
+                - Methods
+    /deleteUrls:
+        delete:
+            operationId: idDeleteUrls
+            produces:
+                - text/plain
+            responses: {}
+            summary: Delete urls from set of urls.
+            tags:
+                - Methods
+    /info:
+        get:
+            operationId: idInfo
+            responses: {}
+            summary: Get info about asker service.
+            tags:
+                - Methods
+    /list:
+        get:
+            operationId: idList
+            responses: {}
+            summary: Get all results between two dates.
+            tags:
+                - Methods
+    /listLatest:
+        get:
+            operationId: idListLatest
+            responses: {}
+            summary: Get latest result.
+            tags:
+                - Methods
+    /setInterval:
+        post:
+            operationId: idSetInterval
+            produces:
+                - text/plain
+            responses: {}
+            summary: Set interval of asking.
+            tags:
+                - Methods
+    /setUrls:
+        post:
+            operationId: idSetUrls
+            produces:
+                - text/plain
+            responses: {}
+            summary: Rewrite set of urls.
+            tags:
+                - Methods
+responses:
+    infoResponse:
+        description: ""
+        headers:
+            interval:
+                example: 10s
+                type: string
+            urls:
+                example:
+                    - https://www.google.com/
+                    - https://yandex.com/
+                items:
+                    type: string
+                type: array
+    listLatestResponse:
+        description: ""
+        headers:
+            date:
+                example: "2022-10-30T20:04:11.827677Z"
+                format: date-time
+                type: string
+            urls:
+                example: '{"http://xydsffew.com/": false, "https://www.google.com/": true}'
+        schema:
+            additionalProperties:
+                type: boolean
+            type: object
+    listResponse:
+        description: ""
+        headers:
+            results:
+                example: '{'
+                items:
+                    $ref: '#/definitions/Result'
+                type: array
+schemes:
+    - http
+swagger: "2.0"
