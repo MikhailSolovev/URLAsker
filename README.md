@@ -2,6 +2,11 @@
 
 ### Get Started
 
+API prefix: `/api/v1`
+
+Service started with default interval of 5s and empty set of urls. For get service information, use `/info` handler.
+For change settings use: `/setInterval` `/setUrls` `/addUrls` `/deleteUrls`. For get results of asker work: `/list`
+`/listLatest`
 
 ### Contracts
 Project has several public contracts: [swagger](https://github.com/MikhailSolovev/URLAsker/blob/main/api/swagger.yaml),
@@ -9,15 +14,17 @@ Project has several public contracts: [swagger](https://github.com/MikhailSolove
 
 ### Make
 
-`run`
+`run` - build and start service
 
-`stop`
+`stop` - stop service
 
-`stop-clean-volumes`
+`stop-clean-volumes` - stop service and clean persistence volumes
 
-`restart`
+`restart` - make new image of asker and restart service
 
-`test-local`
+`test-local` - run local tests
+
+`gen-swagger` - generate swagger file in api directory
 
 ### Code architecture
 ![Alt text](./img/clean_code_architecture.png)

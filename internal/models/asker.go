@@ -14,17 +14,38 @@ type Info struct {
 	URLs     map[string]Empty
 }
 
+// swagger:response infoResponse
 type InfoRestDTO struct {
-	Interval string   `json:"interval"`
-	URLs     []string `json:"urls"`
+	// example: 10s
+	Interval string `json:"interval"`
+	// example: ["https://www.google.com/", "https://yandex.com/"]
+	URLs []string `json:"urls"`
 }
 
+// swagger:response listLatestResponse
 type Result struct {
-	Date time.Time       `json:"date"`
+	// example: 2022-10-30T20:04:11.827677Z
+	Date time.Time `json:"date"`
+	// example: {"http://xydsffew.com/": false, "https://www.google.com/": true}
 	URLs map[string]bool `json:"urls"`
 }
 
+// swagger:response listResponse
 type Results struct {
+	// example: {
+	//  "results": [
+	//    {
+	//      "date": "2022-10-30T20:04:06.840497Z",
+	//      "urls": {
+	//        "http://xydsffew.com/": false,
+	//        "https://www.google.com/": true,
+	//        "https://www.yahoo.com/": true,
+	//        "https://yandex.com/": true
+	//      }
+	//    }
+	//    }
+	//  ]
+	//}
 	Results []Result `json:"results"`
 }
 

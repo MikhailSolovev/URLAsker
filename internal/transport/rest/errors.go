@@ -14,6 +14,10 @@ type Error struct {
 	httpCode     int
 }
 
+func (e *Error) SetMsg(msg string) *Error {
+	return NewError(msg, e.DebugMessage, e.httpCode)
+}
+
 func (e *Error) SetDebugMsg(msg string) *Error {
 	return NewError(e.Message, msg, e.httpCode)
 }

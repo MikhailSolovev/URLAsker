@@ -1,9 +1,18 @@
+// Package classification URLASker.
+//
+//	Schemes: http
+//	BasePath: /api/v1
+//	Version: 0.0.1
+//	Host: localhost
+//
+// swagger:meta
 package rest
 
 import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"github.com/MikhailSolovev/URLAsker/internal/interfaces"
 	"github.com/MikhailSolovev/URLAsker/internal/models"
 	"github.com/gorilla/mux"
 	"net/http"
@@ -16,20 +25,10 @@ import (
 
 type Handler struct {
 	router *mux.Router
-	asker  AskerService
+	asker  interfaces.Asker
 }
 
-type AskerService interface {
-	GetInfo(ctx context.Context) (info models.Info, err error)
-	ListLatestResult(ctx context.Context) (result models.Result, err error)
-	ListResults(ctx context.Context, dateFrom, dateTo time.Time) (results models.Results, err error)
-	SetInterval(ctx context.Context, interval time.Duration) (err error)
-	SetURLs(ctx context.Context, urls ...string) (err error)
-	AddURLs(ctx context.Context, urls ...string) (err error)
-	DeleteURLs(ctx context.Context, urls ...string) (err error)
-}
-
-func New(router *mux.Router, asker AskerService) *Handler {
+func New(router *mux.Router, asker interfaces.Asker) *Handler {
 	return &Handler{router: router, asker: asker}
 }
 
@@ -48,6 +47,16 @@ func (h *Handler) Register() {
 	apiRouter.Use(mux.CORSMethodMiddleware(h.router))
 }
 
+// swagger:operation GET /info Methods idInfo
+//
+// Get info about asker service.
+// ---
+// responses:
+//
+//		'200': infoResponse
+//		'500':
+//	    description: internal server error
+//	    type: string
 func (h *Handler) GetInfo(w http.ResponseWriter, r *http.Request) error {
 	data, err := h.asker.GetInfo(context.Background())
 	if err != nil {
@@ -73,11 +82,28 @@ func (h *Handler) GetInfo(w http.ResponseWriter, r *http.Request) error {
 	return nil
 }
 
+// swagger:operation GET /listLatest Methods idListLatest
+//
+// Get latest result.
+// ---
+// responses:
+//
+//		'200': listLatestResponse
+//	 	'404':
+//	    description: not found
+//	    type: string
+//		'500':
+//	    description: internal server error
+//	    type: string
 func (h *Handler) ListLatestResult(w http.ResponseWriter, r *http.Request) error {
 	data, err := h.asker.ListLatestResult(context.Background())
 	if err != nil {
 		return InternalServerErr.SetDebugMsg(fmt.Sprintf("failed to get result due to error: %v",
 			err.Error()))
+	}
+
+	if len(data.URLs) == 0 {
+		return NotFoundErr.SetDebugMsg("not found")
 	}
 
 	w.Header().Set("Content-Type", "application/json")
@@ -92,6 +118,19 @@ func (h *Handler) ListLatestResult(w http.ResponseWriter, r *http.Request) error
 	return nil
 }
 
+// swagger:operation GET /list Methods idList
+//
+// Get all results between two dates.
+// ---
+// responses:
+//
+//		'200': listResponse
+//	 	'404':
+//	    description: not found
+//	    type: string
+//		'500':
+//	    description: internal server error
+//	    type: string
 func (h *Handler) ListResults(w http.ResponseWriter, r *http.Request) error {
 	// RFC3339 time format, RFC3339: year-month-day T hours-minutes-seconds Z
 	dateFromStr := r.URL.Query().Get("dateFrom")
@@ -116,6 +155,10 @@ func (h *Handler) ListResults(w http.ResponseWriter, r *http.Request) error {
 			err.Error()))
 	}
 
+	if len(data.Results) == 0 {
+		return NotFoundErr.SetDebugMsg("not found")
+	}
+
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(http.StatusOK)
 	body, err := json.Marshal(data)
@@ -128,6 +171,23 @@ func (h *Handler) ListResults(w http.ResponseWriter, r *http.Request) error {
 	return nil
 }
 
+// swagger:operation POST /setInterval Methods idSetInterval
+//
+// Set interval of asking.
+// ---
+// produces:
+// - text/plain
+// responses:
+//
+//		'200':
+//	    description: Success
+//	    type: string
+//	 	'400':
+//	    description: bad request
+//	    type: string
+//		'500':
+//	    description: internal server error
+//	    type: string
 func (h *Handler) SetInterval(w http.ResponseWriter, r *http.Request) error {
 	intervalStr := r.URL.Query().Get("interval")
 	interval, err := time.ParseDuration(intervalStr)
@@ -147,6 +207,23 @@ func (h *Handler) SetInterval(w http.ResponseWriter, r *http.Request) error {
 	return nil
 }
 
+// swagger:operation POST /setUrls Methods idSetUrls
+//
+// Rewrite set of urls.
+// ---
+// produces:
+// - text/plain
+// responses:
+//
+//		'200':
+//	    description: Success
+//	    type: string
+//	 	'400':
+//	    description: bad request
+//	    type: string
+//		'500':
+//	    description: internal server error
+//	    type: string
 func (h *Handler) SetURLs(w http.ResponseWriter, r *http.Request) error {
 	var data []string
 	err := json.NewDecoder(r.Body).Decode(&data)
@@ -171,6 +248,23 @@ func (h *Handler) SetURLs(w http.ResponseWriter, r *http.Request) error {
 	return nil
 }
 
+// swagger:operation PUT /addUrls Methods idAddUrls
+//
+// Append urls to set of urls.
+// ---
+// produces:
+// - text/plain
+// responses:
+//
+//		'200':
+//	    description: Success
+//	    type: string
+//	 	'400':
+//	    description: bad request
+//	    type: string
+//		'500':
+//	    description: internal server error
+//	    type: string
 func (h *Handler) AddURLs(w http.ResponseWriter, r *http.Request) error {
 	var data []string
 	err := json.NewDecoder(r.Body).Decode(&data)
@@ -195,6 +289,23 @@ func (h *Handler) AddURLs(w http.ResponseWriter, r *http.Request) error {
 	return nil
 }
 
+// swagger:operation DELETE /deleteUrls Methods idDeleteUrls
+//
+// Delete urls from set of urls.
+// ---
+// produces:
+// - text/plain
+// responses:
+//
+//		'200':
+//	    description: Success
+//	    type: string
+//	 	'400':
+//	    description: bad request
+//	    type: string
+//		'500':
+//	    description: internal server error
+//	    type: string
 func (h *Handler) DeleteURLs(w http.ResponseWriter, r *http.Request) error {
 	var data []string
 	err := json.NewDecoder(r.Body).Decode(&data)
