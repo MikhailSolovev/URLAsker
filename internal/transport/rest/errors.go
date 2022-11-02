@@ -3,7 +3,7 @@ package rest
 import "net/http"
 
 var (
-	NotFoundErr       = NewError("not found", "", http.StatusNotFound)
+	NotFoundErr       = NewError("not found", "not found", http.StatusNotFound)
 	InternalServerErr = NewError("internal server error", "", http.StatusInternalServerError)
 	BadReqErr         = NewError("bad request", "", http.StatusBadRequest)
 )

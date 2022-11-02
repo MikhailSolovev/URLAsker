@@ -1,119 +1,123 @@
-basePath: /api/v1
-definitions:
-    Result:
-        properties:
-            date:
-                example: "2022-10-30T20:04:11.827677Z"
-                format: date-time
-                type: string
-                x-go-name: Date
-            urls:
-                additionalProperties:
-                    type: boolean
-                example:
-                    http://xydsffew.com/: false
-                    https://www.google.com/: true
-                type: object
-                x-go-name: URLs
-        type: object
-        x-go-package: _/Users/ion_mion/GolandProjects/URLAsker/URLAsker/internal/models
-host: localhost
+openapi: 3.0.3
 info:
-    title: URLASker.
+    title: URLAsker API
     version: 0.0.1
+servers:
+    - url: 'http://localhost'
 paths:
-    /addUrls:
+    /api/v1/info:
+        get:
+            summary: Get info about asker
+            operationId: info
+            responses:
+                '200':
+                    description: Success
+                    content:
+                        application/json:
+                            schema:
+                                type: object
+                                properties:
+                                    interval:
+                                        type: string
+                                    urls:
+                                        type: array
+                                example:
+                                    interval: '5s'
+                                    urls: ["https://www.google.com/", "https://yandex.com/", "https://www.yahoo.com/", "http://xydsffew.com/"]
+                '500':
+                    description: internal server error
+    /api/v1/listLatest:
+        get:
+            summary: Get latest result of asker work
+            operationId: listLatest
+            responses:
+                '200':
+                    description: Success
+                    content:
+                        application/json:
+                            schema:
+
+                '500':
+                    description: internal server error
+    /api/v1/list:
+    /api/v1/setInterval:
+        post:
+            summary: Set interval
+            operationId: setInterval
+            parameters:
+                - name: interval
+                  in: query
+                  schema:
+                      type: string
+                      example: 15s
+                  required: true
+            responses:
+                '200':
+                    description: Success
+                    content:
+                        text/plain:
+                            example: Success
+                '400':
+                    description: invalid interval param
+                '500':
+                    description: internal server error
+    /api/v1/setUrls:
+        post:
+            summary: Rewrite urls
+            operationId: setUrls
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            type: array
+                        example: ["https://www.google.com/", "https://yandex.com/", "https://www.yahoo.com/", "http://xydsffew.com/"]
+            responses:
+                '200':
+                    description: Success
+                    content:
+                        text/plain:
+                            example: Success
+                '400':
+                    description: invalid body or invalid url in body
+                '500':
+                    description: internal server error
+    /api/v1/addUrls:
         put:
-            operationId: idAddUrls
-            produces:
-                - text/plain
-            responses: {}
-            summary: Append urls to set of urls.
-            tags:
-                - Methods
-    /deleteUrls:
+            summary: Append urls
+            operationId: addUrls
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            type: array
+                        example: ["https://www.google.com/", "https://www.rambler.ru/"]
+            responses:
+                '200':
+                    description: Success
+                    content:
+                        text/plain:
+                            example: Success
+                '400':
+                    description: invalid body or invalid url in body
+                '500':
+                    description: internal server error
+    /api/v1/deleteUrls:
         delete:
-            operationId: idDeleteUrls
-            produces:
-                - text/plain
-            responses: {}
-            summary: Delete urls from set of urls.
-            tags:
-                - Methods
-    /info:
-        get:
-            operationId: idInfo
-            responses: {}
-            summary: Get info about asker service.
-            tags:
-                - Methods
-    /list:
-        get:
-            operationId: idList
-            responses: {}
-            summary: Get all results between two dates.
-            tags:
-                - Methods
-    /listLatest:
-        get:
-            operationId: idListLatest
-            responses: {}
-            summary: Get latest result.
-            tags:
-                - Methods
-    /setInterval:
-        post:
-            operationId: idSetInterval
-            produces:
-                - text/plain
-            responses: {}
-            summary: Set interval of asking.
-            tags:
-                - Methods
-    /setUrls:
-        post:
-            operationId: idSetUrls
-            produces:
-                - text/plain
-            responses: {}
-            summary: Rewrite set of urls.
-            tags:
-                - Methods
-responses:
-    infoResponse:
-        description: ""
-        headers:
-            interval:
-                example: 10s
-                type: string
-            urls:
-                example:
-                    - https://www.google.com/
-                    - https://yandex.com/
-                items:
-                    type: string
-                type: array
-    listLatestResponse:
-        description: ""
-        headers:
-            date:
-                example: "2022-10-30T20:04:11.827677Z"
-                format: date-time
-                type: string
-            urls:
-                example: '{"http://xydsffew.com/": false, "https://www.google.com/": true}'
-        schema:
-            additionalProperties:
-                type: boolean
-            type: object
-    listResponse:
-        description: ""
-        headers:
-            results:
-                example: '{'
-                items:
-                    $ref: '#/definitions/Result'
-                type: array
-schemes:
-    - http
-swagger: "2.0"
+            summary: Delete urls
+            operationId: deleteUrls
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            type: array
+                        example: ["https://www.google.com/"]
+            responses:
+                '200':
+                    description: Success
+                    content:
+                        text/plain:
+                            example: Success
+                '400':
+                    description: invalid body or invalid url in body
+                '500':
+                    description: internal server error

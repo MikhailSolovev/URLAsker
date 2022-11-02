@@ -39,7 +39,8 @@ func main() {
 		lg.LogFatal(fmt.Sprintf("failed to ping pg due to error: %v", err))
 	}
 
-	askerSvc := asker.New(storage, &models.Info{Interval: cfg.AskerInterval, Ticker: time.NewTicker(cfg.AskerInterval)})
+	askerSvc := asker.New(storage, &models.Info{Interval: cfg.AskerInterval, Ticker: time.NewTicker(cfg.AskerInterval),
+		URLs: map[string]models.Empty{}})
 
 	lg.LogInfo(fmt.Sprintf("Asker started with interval %v", cfg.AskerInterval.String()))
 	ctxAsker, cancelAsker := context.WithCancel(context.Background())

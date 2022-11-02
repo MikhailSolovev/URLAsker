@@ -19,8 +19,3 @@ restart:
 .PHONY: test-local
 test:
 	go test ./test -v -url=http://localhost
-
-# Need to install: https://github.com/go-swagger/go-swagger
-.PHONY: gen-swagger
-gen-swagger:
-	GO111MODULE=off swagger generate spec -o ./api/swagger.yaml --scan-models

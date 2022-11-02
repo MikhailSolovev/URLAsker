@@ -17,7 +17,7 @@ GET http://{{host}}/api/v1/listLatest
 Accept: application/json
 
 ###
-GET http://{{host}}/api/v1/list?dateFrom=2022-10-28T15:28:00Z&dateTo=2022-11-01T18:28:10Z
+GET http://{{host}}/api/v1/list?dateFrom=2022-11-01T15:28:00Z&dateTo=2022-11-02T18:28:10Z
 Accept: application/json
 
 ###

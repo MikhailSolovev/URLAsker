@@ -51,8 +51,6 @@ Project has several public contracts: [swagger](https://github.com/MikhailSolove
 
 `test-local` - run local tests
 
-`gen-swagger` - generate swagger file in api directory
-
 ### Code architecture
 ![Alt text](./img/clean_code_architecture.png)
 
